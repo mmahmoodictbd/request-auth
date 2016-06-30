@@ -70,15 +70,23 @@ create table ClientDetails (
   autoApproveScopes VARCHAR(255)
 );
 
+drop table if exists user_roles;
+drop table if exists users;
+
 CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `enabled` tinyint(4) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`username`)
+  `two_fa_enabled` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uni_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `users` (`username`, `password`, `enabled`) VALUES
-('admin', '$2a$10$LM7l9extPhwS7Uuy3hPsW.b899Kmnxe0B9YsE7UVXKhC5OKLbMwsW', 1);
+INSERT INTO `users` (`username`, `password`, `enabled`, `two_fa_enabled`) VALUES
+('admin', '$2a$10$LM7l9extPhwS7Uuy3hPsW.b899Kmnxe0B9YsE7UVXKhC5OKLbMwsW', 1, 0);
+INSERT INTO `users` (`username`, `password`, `enabled`, `two_fa_enabled`) VALUES
+('admin1', '$2a$10$LM7l9extPhwS7Uuy3hPsW.b899Kmnxe0B9YsE7UVXKhC5OKLbMwsW', 1, 1);
 
 CREATE TABLE IF NOT EXISTS `user_roles` (
   `user_role_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -91,3 +99,5 @@ CREATE TABLE IF NOT EXISTS `user_roles` (
 
 INSERT INTO `user_roles` (`user_role_id`, `username`, `role`) VALUES
 (1, 'admin', 'ROLE_USER');
+INSERT INTO `user_roles` (`user_role_id`, `username`, `role`) VALUES
+(2, 'admin1', 'ROLE_USER');
