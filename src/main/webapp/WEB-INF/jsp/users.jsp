@@ -18,26 +18,66 @@
 <body>
 
 	<div class="container">
+		<%@include file="fragment/logout.jsp"%>
+
 		<h2>Users</h2>
 
 		<form action="/users" method="post">
+
+			<input type="hidden" name="id" value="${userForm.id}" />
+
 			<div class="form-group">
 				<label> Username : </label><input class="form-control" type="text"
-					name="username" />
+					name="username" value="${userForm.username}" />
 
 			</div>
+
 			<div class="form-group">
-				<label> Password : </label><input class="form-control" type="text"
-					name="password" />
+				<label> Password : </label><input class="form-control"
+					type="password" name="password" />
 
 			</div>
+
 			<div class="form-group">
 				<label> Repeat Password : </label><input class="form-control"
-					type="text" name="repeatpassword" />
+					type="password" name="repeatPassword" />
 
 			</div>
+
+			<div class="form-group">
+				<label> Moble No. : </label><input class="form-control" type="text"
+					name="mobileno" value="${userForm.mobileno}" />
+
+			</div>
+
+			<div>
+				<c:choose>
+					<c:when test="${userForm.enabled}">
+						<label class="checkbox-inline"><input type="checkbox"
+							name="enabled" value="true" checked>Enable</label>
+					</c:when>
+					<c:otherwise>
+						<label class="checkbox-inline"><input type="checkbox"
+							name="enabled" value="true">Enable</label>
+					</c:otherwise>
+				</c:choose>
+
+				<c:choose>
+					<c:when test="${userForm.enable2fa}">
+						<label class="checkbox-inline"><input type="checkbox"
+							name="enable2fa" value="true" checked>Enable 2FA</label>
+					</c:when>
+					<c:otherwise>
+						<label class="checkbox-inline"><input type="checkbox"
+							name="enable2fa" value="true">Enable 2FA</label>
+					</c:otherwise>
+				</c:choose>
+
+			</div>
+
+
 			<input type="hidden" name="${_csrf.parameterName}"
-				value="${_csrf.token}" />
+				value="${_csrf.token}" /> <br />
 			<div>
 				<input class="btn btn-primary" type="submit" value="Create" />
 			</div>
@@ -51,16 +91,28 @@
 			<thead>
 				<tr>
 					<th>Username</th>
+					<th>Mobile No.</th>
 					<th>Enable</th>
 					<th>Enable 2FA</th>
+					<th>OAuth ClientID</th>
+					<th>OAuth Secret</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
 				<c:forEach items="${userPage.content}" var="user">
 					<tr>
 						<td>${user.username}</td>
+						<td>${user.mobileno}</td>
 						<td>${user.enabled}</td>
-						<td>${user.twoFaEnabled}</td>
+						<td>${user.enable2fa}</td>
+						<td>${user.oAuthClientDetails.clientId}</td>
+						<td>${user.oAuthClientDetails.clientSecret}</td>
+						<td><a class="btn btn-primary"
+							href="/users?username=${user.username}">Update</a>
+							<button class="btn btn-danger"
+								onclick="this.disabled=true;post('${deleteUrl}')">Delete</button>
+						</td>
 					</tr>
 				</c:forEach>
 

@@ -1,11 +1,9 @@
 package com.dsinnovators.aauth.otp;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
+import com.dsinnovators.aauth.util.StringUtil;
 
 public class TOTPGenerator {
-	
-	private SecureRandom random = new SecureRandom();
+
 	private final String secret;
 	private final Clock clock;
 
@@ -19,7 +17,7 @@ public class TOTPGenerator {
 	}
 
 	private String getRamdomSecret() {
-		return new BigInteger(130, random).toString(32);
+		return StringUtil.secureRandomString();
 	}
 
 }

@@ -16,17 +16,7 @@
 
 <body>
 
-	<c:if test="${pageContext.request.remoteUser ne null}">
-		<h4>
-			Hello <b><c:out value="${pageContext.request.remoteUser}" /></b>
-		</h4>
-
-		<form action="/logout" method="post">
-			<input class="btn btn-primary" type="submit" value="Sign Out" /> <input
-				type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-		</form>
-	</c:if>
-
+	<%@include file="fragment/logout.jsp"%>
 
 	<c:if test="${pageContext.request.remoteUser eq null}">
 		<form action="/login" method="post">

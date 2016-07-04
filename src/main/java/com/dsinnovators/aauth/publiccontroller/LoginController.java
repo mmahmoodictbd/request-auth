@@ -32,7 +32,7 @@ public class LoginController {
 
 		User loggedInUser = userService.getUserByUsername(username);
 
-		if (loggedInUser.isTwoFaEnabled()) {
+		if (loggedInUser.isEnable2fa()) {
 			request.getSession().setAttribute(TWOFA_VERIFICATION_REQUIRED, true);
 		} else {
 			request.getSession().setAttribute(TWOFA_VERIFICATION_REQUIRED, false);

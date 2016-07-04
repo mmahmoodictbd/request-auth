@@ -12,6 +12,11 @@ create table oauth_client_details (
   additional_information VARCHAR(4096),
   autoapprove VARCHAR(255)
 );
+
+INSERT INTO `oauth_client_details` (`client_id`, `client_secret`, `scope`, `authorized_grant_types`) VALUES
+('9v6fvn7221bniao2vc6jnvp31l', '2oe11m1ojh6fgqrn503sfp3r5h', 'read', 'password,authorization_code,refresh_token');
+INSERT INTO `oauth_client_details` (`client_id`, `client_secret`, `scope`, `authorized_grant_types`) VALUES
+('bniao2vc6jnvp31l9v6fvn7221', 'qrn503sfp3r5h2oe11m1ojh6fg', 'read', 'password,authorization_code,refresh_token');
  
 drop table if exists oauth_client_token;
 create table oauth_client_token (
@@ -73,21 +78,24 @@ create table ClientDetails (
 drop table if exists user_roles;
 drop table if exists users;
 
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `enabled` tinyint(4) NOT NULL DEFAULT '1',
-  `two_fa_enabled` tinyint(4) NOT NULL DEFAULT '1',
+  `enable2fa` tinyint(4) NOT NULL DEFAULT '1',
+  `oauth_client_id` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uni_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `users` (`username`, `password`, `enabled`, `two_fa_enabled`) VALUES
-('admin', '$2a$10$LM7l9extPhwS7Uuy3hPsW.b899Kmnxe0B9YsE7UVXKhC5OKLbMwsW', 1, 0);
-INSERT INTO `users` (`username`, `password`, `enabled`, `two_fa_enabled`) VALUES
-('admin1', '$2a$10$LM7l9extPhwS7Uuy3hPsW.b899Kmnxe0B9YsE7UVXKhC5OKLbMwsW', 1, 1);
+INSERT INTO `users` (`username`, `password`, `enabled`, `enable2fa`, `oauth_client_id`) VALUES
+('admin', '$2a$10$LM7l9extPhwS7Uuy3hPsW.b899Kmnxe0B9YsE7UVXKhC5OKLbMwsW', 1, 0, '9v6fvn7221bniao2vc6jnvp31l');
+INSERT INTO `users` (`username`, `password`, `enabled`, `enable2fa`, `oauth_client_id`) VALUES
+('admin1', '$2a$10$LM7l9extPhwS7Uuy3hPsW.b899Kmnxe0B9YsE7UVXKhC5OKLbMwsW', 1, 1, 'bniao2vc6jnvp31l9v6fvn7221');
 
+DROP TABLE IF EXISTS `user_roles`;
 CREATE TABLE IF NOT EXISTS `user_roles` (
   `user_role_id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(45) NOT NULL,
@@ -97,7 +105,5 @@ CREATE TABLE IF NOT EXISTS `user_roles` (
   KEY `fk_username_idx` (`username`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
-INSERT INTO `user_roles` (`user_role_id`, `username`, `role`) VALUES
-(1, 'admin', 'ROLE_USER');
-INSERT INTO `user_roles` (`user_role_id`, `username`, `role`) VALUES
-(2, 'admin1', 'ROLE_USER');
+INSERT INTO `user_roles` (`user_role_id`, `username`, `role`) VALUES (1, 'admin', 'ROLE_USER');
+INSERT INTO `user_roles` (`user_role_id`, `username`, `role`) VALUES (2, 'admin1', 'ROLE_USER');
