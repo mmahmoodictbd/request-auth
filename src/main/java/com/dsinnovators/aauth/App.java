@@ -10,6 +10,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.context.request.RequestContextListener;
 
 import com.dsinnovators.aauth.filter.OTPFilter;
 
@@ -30,14 +31,19 @@ public class App extends SpringBootServletInitializer {
 
 		FilterRegistrationBean filter = new FilterRegistrationBean();
 		filter.setName("OTPFilter");
-		filter.setFilter(optFilter());
+		filter.setFilter(otpFilter());
 		filter.addUrlPatterns("/*");
 
 		return filter;
 	}
 
-	@Bean(name = "optFilter")
-	public Filter optFilter() {
+	@Bean(name = "otpFilter")
+	public Filter otpFilter() {
 		return new OTPFilter();
+	}
+
+	@Bean
+	public RequestContextListener requestContextListener() {
+		return new RequestContextListener();
 	}
 }
