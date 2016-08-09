@@ -21,47 +21,41 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableResourceServer
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Autowired
-	private DataSource dataSource;
+    @Autowired
+    private DataSource dataSource;
 
-	@Autowired
-	private ApplicationEventPublisher applicationEventPublisher;
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
 
-	@Autowired
-	@Qualifier("authenticationProvider")
-	private AuthenticationProvider authenticationProvider;
+    @Autowired
+    @Qualifier("authenticationProvider")
+    private AuthenticationProvider authenticationProvider;
 
-	@Autowired
-	private UserDetailsService userDetailsService;
+    @Autowired
+    private UserDetailsService userDetailsService;
 
-	@Autowired
-	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-		/*auth.jdbcAuthentication().dataSource(dataSource)
-				.usersByUsernameQuery("select username, password, enabled from users where username=?")
-				.authoritiesByUsernameQuery("select username, role from user_roles where username=?")
-				.passwordEncoder(passwordEncoder());*/
-		// auth.authenticationEventPublisher(new
-		// DefaultAuthenticationEventPublisher(applicationEventPublisher));
-		auth.authenticationProvider(authenticationProvider);
-		auth.userDetailsService(userDetailsService);
-	}
+    @Autowired
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        // auth.authenticationEventPublisher(new DefaultAuthenticationEventPublisher(applicationEventPublisher));
+        auth.authenticationProvider(authenticationProvider);
+    }
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/", "/home", "/webjars/**", "/css/**", "/js/**").permitAll().anyRequest()
-				.authenticated().and().formLogin().loginPage("/login").usernameParameter("username")
-				.passwordParameter("password").defaultSuccessUrl("/loginSuccess").permitAll().and().logout()
-				.permitAll();
-	}
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests().antMatchers("/", "/home", "/webjars/**", "/css/**", "/js/**").permitAll().anyRequest()
+                .authenticated().and().formLogin().loginPage("/login").usernameParameter("username")
+                .passwordParameter("password").defaultSuccessUrl("/loginSuccess").permitAll().and().logout()
+                .permitAll();
+    }
 
-	@Override
-	@Bean
-	public AuthenticationManager authenticationManagerBean() throws Exception {
-		return super.authenticationManagerBean();
-	}
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 
-	@Bean(name = "passwordEncoder")
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+    @Bean(name = "passwordEncoder")
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }

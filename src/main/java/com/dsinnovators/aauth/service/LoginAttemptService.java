@@ -10,39 +10,47 @@ import org.springframework.stereotype.Service;
 @Service
 public class LoginAttemptService {
 
-	private final int MAX_ATTEMPT = 3;
-	private final String LOGIN_ATTEMPT_PREFIX = "LoginAttempt-IP-";
+    private final int MAX_ATTEMPT = 3;
+    private final String LOGIN_ATTEMPT_PREFIX = "LoginAttempt-IP-";
 
-	@SuppressWarnings("unused")
-	private final int EXPIRE_TIME_SECOND = 300;
+    @SuppressWarnings("unused")
+    private final int EXPIRE_TIME_SECOND = 300;
 
-	@Autowired
-	private RedisTemplate<String, Long> redisTemplate;
+    @Autowired
+    private RedisTemplate<String, Long> redisTemplate;
 
-	private ValueOperations<String, Long> counter;
+    private ValueOperations<String, Long> counter;
 
-	@PostConstruct
-	private void init() {
-		counter = redisTemplate.opsForValue();
-	}
+    @PostConstruct
+    private void init() {
+        counter = redisTemplate.opsForValue();
+    }
 
-	public void loginSucceeded(String remoteIp) {
-		counter.getOperations().delete(LOGIN_ATTEMPT_PREFIX + remoteIp);
-	}
+    public void loginSucceeded(String remoteIP) {
+        counter.getOperations().delete(LOGIN_ATTEMPT_PREFIX + remoteIP);
+    }
 
-	public void loginFailed(String remoteIp) {
-		counter.increment(LOGIN_ATTEMPT_PREFIX + remoteIp, 1);
-	}
+    public void loginFailed(String remoteIP) {
+        counter.increment(LOGIN_ATTEMPT_PREFIX + remoteIP, 1L);
+    }
 
-	public boolean isBlocked(String remoteIp) {
+    public boolean isBlocked(String remoteIP) {
 
-		Long failedAttempt = counter.get(LOGIN_ATTEMPT_PREFIX + remoteIp);
+        Long failedAttempt = getAndCreate(LOGIN_ATTEMPT_PREFIX + remoteIP);
 
-		if (failedAttempt > MAX_ATTEMPT) {
-			return true;
-		} else {
-			return false;
-		}
+        if (failedAttempt > MAX_ATTEMPT) {
+            return true;
+        } else {
+            return false;
+        }
 
-	}
+    }
+
+    private Long getAndCreate(String key) {
+        Long val = counter.get(key);
+        if (val == null) {
+            return counter.increment(key, 0L);
+        }
+        return counter.get(key);
+    }
 }

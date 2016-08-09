@@ -38,10 +38,15 @@
 		</form>
 	</c:if>
 
+<c:if test="${!empty SPRING_SECURITY_LAST_EXCEPTION}">
+	<div class="error"><c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}"/></div>
+	<c:remove scope="session" var="SPRING_SECURITY_LAST_EXCEPTION"/>
+</c:if>
+<!-- 
 	<c:if test="${param.error ne null}">
-		<div>Invalid username and password.</div>
+		<div>${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}</div>
 	</c:if>
-
+ -->
 	<script src="webjars/jquery/1.11.1/jquery.js"></script>
 	<script src="webjars/bootstrap/3.3.6/js/bootstrap.js"></script>
 </body>
