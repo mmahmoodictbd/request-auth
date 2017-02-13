@@ -3,7 +3,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.dsinnovators.oauthclient</groupId>
+	<groupId>com.chumbok.oauthclient</groupId>
 	<artifactId>OAuthClient</artifactId>
 	<packaging>war</packaging>
 
